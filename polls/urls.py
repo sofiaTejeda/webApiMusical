@@ -7,6 +7,12 @@ urlpatterns = [
     path('getGrupo', views.getGrupo, name='getGrupo'),
     path('getCanciones', views.getCanciones, name='getCanciones'),
     path('getTestRecomendacion', views.getTestRecomendacion, name='getTestRecomendacion'),
+    path('getsaveUsuarios', views.getsaveUsuarios, name='getsaveUsuarios'),
+    path('getFirstUsuarioDisponible', views.getFirstUsuarioDisponible, name='getFirstUsuarioDisponible'),
+    path('getInitUsuarioDisponible', views.getInitUsuarioDisponible, name='getInitUsuarioDisponible'),
+
+
+
 
 
 

@@ -66,3 +66,52 @@ class GrupoService:
 
         dataJson = json.dumps(listCanciones, indent=4 ,cls=CancionEncoder)
         return dataJson
+    
+    def saveUsuarios(self):
+        users = self._db.collection_group(u'users').stream()
+
+        userTemp = {}
+        for user in users:
+            userFire = user.to_dict()
+            userTemp = {u'id': userFire['id'], u'usado': False}
+            #doc_ref = self._db.collection(u'grupos').document()       
+
+            try :
+                self._db.collection('usuarioDisponibles').add(userTemp)
+            except:
+                print('error')
+    
+    def getInitUsuarioDisponible(self, idUsuario):
+        user = self._db.collection(u'usuarioDisponibles').where(u'usado', u'==', False).limit(1).stream()
+        userFirebase = self.getFirstUsuarioDisponible(idUsuario)
+        userFire = {'id' : None}
+        #if(len(user) > 0):
+        if(userFirebase['idFirebase'] == None):
+            for u in user:
+                userFire = u.to_dict()
+                id = u.id
+
+                userDocument = self._db.collection(u'usuarioDisponibles').document(id)
+                userDocument.update({ 'usado':True })
+
+                usuarioDocument = self._db.collection(u'usuarios').document()
+                usuarioDocument.set({u'idFirebase': idUsuario, 'idRecomendacion': userFire['id']})
+        else: 
+            userFire['id'] = userFirebase['idRecomendacion']
+
+        return userFire['id']
+    
+    def getFirstUsuarioDisponible(self, idUsuario):
+        user = self._db.collection(u'usuarios').where(u'idFirebase', u'==', idUsuario).limit(1).stream()
+        
+        userFire = {'idFirebase' : None}
+        #if(len(user) > 0):
+        for u in user:
+            userFire = u.to_dict()
+
+        return userFire
+
+
+
+
+

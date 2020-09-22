@@ -29,9 +29,38 @@ def getCanciones(resquest):
     return HttpResponse(resp)
 
 def getTestRecomendacion(request):
+    id = request.GET['id']
     df=rc.Recommender(1000,60)
-    recomendacion=df.EvalAlgorithm(10,"a820d2d4f16bbd53be9e41e0417dfb234bfdfba8")
+
+    grupoService = GrupoService()
+    idR = grupoService.getFirstUsuarioDisponible(id)
+
+    recomendacion=df.EvalAlgorithm(10,idR['idRecomendacion'])
+    #"a820d2d4f16bbd53be9e41e0417dfb234bfdfba8"
     jsonStr = json.dumps(recomendacion, indent=4 ,cls=cs.RecomendacionEncoder)
     return HttpResponse(jsonStr)
+
+def getsaveUsuarios(request):
+    grupoService = GrupoService()
+    grupoService.saveUsuarios()
+
+    return HttpResponse()
+
+def getFirstUsuarioDisponible(request):
+    grupoService = GrupoService()
+    id = request.GET['id']
+    idR = grupoService.getFirstUsuarioDisponible(id)    
+
+    jsonStr =  json.dumps(idR)
+    return HttpResponse(jsonStr)
+
+def getInitUsuarioDisponible(request):
+    grupoService = GrupoService()
+    id = request.GET['id']
+    idR = grupoService.getInitUsuarioDisponible(id)    
+
+    jsonStr =  json.dumps(idR)
+    return HttpResponse(jsonStr)
+
 
 
